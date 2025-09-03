@@ -12,7 +12,7 @@ type AppProps = {
 };
 
 const fontAxes = {
-   "Source Sans 3": [
+	"Source Sans 3": [
 	   { name: "Weight", values: ["100", "200", "300", "400", "500", "600", "700", "800", "900"] },
 	   { name: "Italic", values: ["0", "1"] },
 	   { name: "Størrelse", values: ["16", "18", "20"] },
@@ -30,6 +30,14 @@ const fontAxes = {
 	   { name: "Størrelse", values: ["16", "18", "20"] },
    ],
    "Open Sans": [
+	   { name: "Weight", values: ["300", "400", "500", "600", "700", "800"] },
+	   { name: "Width", values: ["75", "85", "100", "115", "125"] },
+	   { name: "Størrelse", values: ["16", "18", "20"] }
+   ],
+   "Inter": [
+	   { name: "Weight", values: ["100", "200", "300", "400", "500", "600", "700", "800", "900"] },
+	   { name: "Italic", values: ["0", "1"] },
+	   { name: "Størrelse", values: ["16", "18", "20"] },
 	   { name: "Weight", values: ["100", "200", "300", "400", "500", "600", "700", "800", "900"] },
 	   { name: "Width", values: ["75", "80", "85", "90", "95", "100"] },
 	   { name: "Italic", values: ["0", "1"] },
@@ -40,8 +48,55 @@ const fontAxes = {
 const defaultFont = "Source Sans 3";
 
 export default function App({ dark, setDark }: AppProps) {
-		const [fontCol1, setFontCol1] = useState(defaultFont);
-		const [fontCol2, setFontCol2] = useState(defaultFont);
+	// Hjelpefunksjon for å mappe fontnavn til CSS font-family
+	const getFontFamily = (font: string) => {
+			switch (font) {
+				case "Roboto Flex":
+					return "'Roboto Flex', sans-serif";
+				case "Open Sans":
+					return "'Open Sans Variable', sans-serif";
+				case "Source Sans 3":
+					return "'Source Sans 3 Variable', sans-serif";
+				case "Noto Sans":
+					return "'Noto Sans Variable', sans-serif";
+				case "Inter":
+					return "'Inter', sans-serif";
+				default:
+					return "inherit";
+			}
+	};
+	// Dynamisk tekst for Accordion basert på fontvalg
+	const accordionTexts: Record<string, string[]> = {
+		   "Source Sans 3": [
+			   "Source Sans 3: Innhold for rad 1.",
+			   "Source Sans 3: Innhold for rad 2.",
+			   "Source Sans 3: Innhold for rad 3."
+		   ],
+		   "Roboto Flex": [
+			   "Roboto Flex: Innhold for rad 1.",
+			   "Roboto Flex: Innhold for rad 2.",
+			   "Roboto Flex: Innhold for rad 3."
+		   ],
+		   "Noto Sans": [
+			   "Noto Sans: Innhold for rad 1.",
+			   "Noto Sans: Innhold for rad 2.",
+			   "Noto Sans: Innhold for rad 3."
+		   ],
+		   "Open Sans": [
+			   "Open Sans: Innhold for rad 1.",
+			   "Open Sans: Innhold for rad 2.",
+			   "Open Sans: Innhold for rad 3."
+		   ],
+		   "Inter": [
+			   "Inter: Innhold for rad 1.",
+			   "Inter: Innhold for rad 2.",
+			   "Inter: Innhold for rad 3."
+		   ]
+	};
+	const [fontCol1, setFontCol1] = useState(defaultFont);
+	const [fontCol2, setFontCol2] = useState(defaultFont);
+	// Debug: logg fontCol1 og fontCol2 for å se om de faktisk endres
+	console.log("Valgt fontCol1:", fontCol1, "fontCol2:", fontCol2);
 		const [axesCol1, setAxesCol1] = useState(fontAxes[defaultFont]);
 		const [axesCol2, setAxesCol2] = useState(fontAxes[defaultFont]);
 		const [axisValuesCol1, setAxisValuesCol1] = useState(axesCol1.map(a => a.values[0]));
@@ -112,7 +167,7 @@ export default function App({ dark, setDark }: AppProps) {
 
 				{/* To kolonner med heading og dummy tekst */}
 						<div style={{ display: "flex", gap: 64, marginTop: 48, alignItems: "stretch" }}>
-					<div style={{ flex: 1.2, minWidth: 0, display: "flex", flexDirection: "column", minHeight: 520 }}>
+					  <div style={{ flex: 1.2, minWidth: 0, display: "flex", flexDirection: "column", minHeight: 520, fontFamily: getFontFamily(fontCol1) }}>
 										   {/* Kolonne 1-heading fjernet */}
 										{/* Stor select for fontvalg */}
 																		<Select
@@ -125,17 +180,17 @@ export default function App({ dark, setDark }: AppProps) {
 																				<option key={f} value={f}>{f}</option>
 																			))}
 																		</Select>
-																		<Button
-																			ref={popoverAnchorCol1}
-																			size="small"
-																			variant="secondary"
-																			style={{ marginBottom: 16, width: 110, minWidth: 0, padding: '0 12px' }}
-																			onClick={() => setPopoverOpenCol1((v) => !v)}
-																			aria-expanded={popoverOpenCol1}
-																			aria-controls="popover-col1"
-																		>
-																			Velg akser
-																		</Button>
+																						<Button
+																							ref={popoverAnchorCol1}
+																							size="small"
+																							variant="secondary"
+																							style={{ marginBottom: 16, width: 110, minWidth: 0, padding: '0 12px' }}
+																							onClick={() => setPopoverOpenCol1((v) => !v)}
+																							aria-expanded={popoverOpenCol1}
+																							aria-controls="popover-col1"
+																						>
+																							Paragraph
+																						</Button>
 																		<Switch
 																			checked={displayFontCol1}
 																			onChange={() => setDisplayFontCol1(v => !v)}
@@ -318,26 +373,29 @@ export default function App({ dark, setDark }: AppProps) {
 																																																																																		>Success</Tag>
 																																																																															 </div>
 																																																																																																				   {/* Accordion fjernet */}
-																																																																															 <Accordion style={{ marginTop: 20 }}>
-																																																																																 <Accordion.Item>
-																																																																																	 <Accordion.Header>Accordion rad 1</Accordion.Header>
-																																																																																	 <Accordion.Content>
-																																																																																		 Innhold for rad 1 i kolonne 1.
-																																																																																	 </Accordion.Content>
-																																																																																 </Accordion.Item>
-																																																																																 <Accordion.Item>
-																																																																																	 <Accordion.Header>Accordion rad 2</Accordion.Header>
-																																																																																	 <Accordion.Content>
-																																																																																		 Innhold for rad 2 i kolonne 1.
-																																																																																	 </Accordion.Content>
-																																																																																 </Accordion.Item>
-																																																																																 <Accordion.Item>
-																																																																																	 <Accordion.Header>Accordion rad 3</Accordion.Header>
-																																																																																	 <Accordion.Content>
-																																																																																		 Innhold for rad 3 i kolonne 1.
-																																																																																	 </Accordion.Content>
-																																																																																 </Accordion.Item>
-																																																																															 </Accordion>
+																																																																																			<div style={{ marginTop: 20, marginBottom: 8, fontSize: 14, color: '#888' }}>
+																																																																																				Valgt font i kolonne 1: <b>{fontCol1}</b>
+																																																																																			</div>
+																																																																																			<Accordion style={{ marginTop: 0 }}>
+																																																																																		<Accordion.Item>
+																																																																																			<Accordion.Header>Accordion rad 1</Accordion.Header>
+																																																																																			<Accordion.Content>
+																																																																																				{(accordionTexts[fontCol1]?.[0]) || `Ingen innhold for valgt font: ${fontCol1}`}
+																																																																																			</Accordion.Content>
+																																																																																		</Accordion.Item>
+																																																																																		<Accordion.Item>
+																																																																																			<Accordion.Header>Accordion rad 2</Accordion.Header>
+																																																																																			<Accordion.Content>
+																																																																																				{(accordionTexts[fontCol1]?.[1]) || `Ingen innhold for valgt font: ${fontCol1}`}
+																																																																																			</Accordion.Content>
+																																																																																		</Accordion.Item>
+																																																																																		<Accordion.Item>
+																																																																																			<Accordion.Header>Accordion rad 3</Accordion.Header>
+																																																																																			<Accordion.Content>
+																																																																																				{(accordionTexts[fontCol1]?.[2]) || `Ingen innhold for valgt font: ${fontCol1}`}
+																																																																																			</Accordion.Content>
+																																																																																		</Accordion.Item>
+																																																																																	</Accordion>
 																																																																																																																									 <Alert variant="success" style={{ marginTop: 'var(--a-spacing-8)' }}>
 																																																																																																																										 Dette er en suksessmelding for kolonne 1.
 																																																																																																																									 </Alert>
@@ -367,7 +425,7 @@ export default function App({ dark, setDark }: AppProps) {
 																																																																																																																																														{/* Fjernet DatePicker som ga feil */}
 																																																																														 </div>
 					</div>
-					<div style={{ flex: 1.2, minWidth: 0, display: "flex", flexDirection: "column", minHeight: 520 }}>
+					  <div style={{ flex: 1.2, minWidth: 0, display: "flex", flexDirection: "column", minHeight: 520, fontFamily: getFontFamily(fontCol2) }}>
 										   {/* Kolonne 2-heading fjernet */}
 										{/* Stor select for fontvalg */}
 																		<Select
@@ -380,17 +438,17 @@ export default function App({ dark, setDark }: AppProps) {
 																				<option key={f} value={f}>{f}</option>
 																			))}
 																		</Select>
-																		<Button
-																			ref={popoverAnchorCol2}
-																			size="small"
-																			variant="secondary"
-																			style={{ marginBottom: 16, width: 110, minWidth: 0, padding: '0 12px' }}
-																			onClick={() => setPopoverOpenCol2((v) => !v)}
-																			aria-expanded={popoverOpenCol2}
-																			aria-controls="popover-col2"
-																		>
-																			Velg akser
-																		</Button>
+																						<Button
+																							ref={popoverAnchorCol2}
+																							size="small"
+																							variant="secondary"
+																							style={{ marginBottom: 16, width: 110, minWidth: 0, padding: '0 12px' }}
+																							onClick={() => setPopoverOpenCol2((v) => !v)}
+																							aria-expanded={popoverOpenCol2}
+																							aria-controls="popover-col2"
+																						>
+																							Paragraph
+																						</Button>
 																		<Switch
 																			checked={displayFontCol2}
 																			onChange={() => setDisplayFontCol2(v => !v)}
@@ -573,26 +631,29 @@ export default function App({ dark, setDark }: AppProps) {
 																																																																																		>Success</Tag>
 																																																																															 </div>
 																																																																																																				   {/* Accordion fjernet */}
-																																																																															 <Accordion style={{ marginTop: 20 }}>
-																																																																																 <Accordion.Item>
-																																																																																	 <Accordion.Header>Accordion rad 1</Accordion.Header>
-																																																																																	 <Accordion.Content>
-																																																																																		 Innhold for rad 1 i kolonne 2.
-																																																																																	 </Accordion.Content>
-																																																																																 </Accordion.Item>
-																																																																																 <Accordion.Item>
-																																																																																	 <Accordion.Header>Accordion rad 2</Accordion.Header>
-																																																																																	 <Accordion.Content>
-																																																																																		 Innhold for rad 2 i kolonne 2.
-																																																																																	 </Accordion.Content>
-																																																																																 </Accordion.Item>
-																																																																																 <Accordion.Item>
-																																																																																	 <Accordion.Header>Accordion rad 3</Accordion.Header>
-																																																																																	 <Accordion.Content>
-																																																																																		 Innhold for rad 3 i kolonne 2.
-																																																																																	 </Accordion.Content>
-																																																																																 </Accordion.Item>
-																																																																															 </Accordion>
+																																																																																			<div style={{ marginTop: 20, marginBottom: 8, fontSize: 14, color: '#888' }}>
+																																																																																				Valgt font i kolonne 2: <b>{fontCol2}</b>
+																																																																																			</div>
+																																																																																			<Accordion style={{ marginTop: 0 }}>
+																																																																																		<Accordion.Item>
+																																																																																			<Accordion.Header>Accordion rad 1</Accordion.Header>
+																																																																																			<Accordion.Content>
+																																																																																				{(accordionTexts[fontCol2]?.[0]) || `Ingen innhold for valgt font: ${fontCol2}`}
+																																																																																			</Accordion.Content>
+																																																																																		</Accordion.Item>
+																																																																																		<Accordion.Item>
+																																																																																			<Accordion.Header>Accordion rad 2</Accordion.Header>
+																																																																																			<Accordion.Content>
+																																																																																				{(accordionTexts[fontCol2]?.[1]) || `Ingen innhold for valgt font: ${fontCol2}`}
+																																																																																			</Accordion.Content>
+																																																																																		</Accordion.Item>
+																																																																																		<Accordion.Item>
+																																																																																			<Accordion.Header>Accordion rad 3</Accordion.Header>
+																																																																																			<Accordion.Content>
+																																																																																				{(accordionTexts[fontCol2]?.[2]) || `Ingen innhold for valgt font: ${fontCol2}`}
+																																																																																			</Accordion.Content>
+																																																																																		</Accordion.Item>
+																																																																																	</Accordion>
 																																																																																																																									 <Alert variant="success" style={{ marginTop: 'var(--a-spacing-8)' }}>
 																																																																																																																										 Dette er en suksessmelding for kolonne 2.
 																																																																																																																									 </Alert>
