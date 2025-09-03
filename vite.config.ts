@@ -5,5 +5,5 @@ import react from '@vitejs/plugin-react'
 // Set the base path to your repo name for GitHub Pages deployment
 export default defineConfig({
   plugins: [react()],
-  base: '/aksel-darkside-demo/',
+  base: '/',
 })
